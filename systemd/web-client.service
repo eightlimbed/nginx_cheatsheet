@@ -1,0 +1,15 @@
+[Unit]
+Description=Web client NodeJS service
+After=network.target photo-filter.target photo-storage.target
+
+[Service]
+Restart=always
+User=nobody
+Group=nobody
+Environment=NODE_ENV=production
+Environment=AWS_ACCESS_KEY_ID=12312312312312312312
+Environment=AWS_SECRET_ACCESS_KEY=123123123123123123123
+ExecStart=/srv/www/s3photoapp/apps/web-client/bin/www
+
+[Install]
+WantedBy=multi-user.target

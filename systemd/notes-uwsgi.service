@@ -1,0 +1,18 @@
+[Unit]
+Description=uWSGI Notes Application
+
+[Service]
+WorkingDirectory=/srv/www/content-nginx-uwsgi
+Environment=PIPENV_VENV_IN_PROJECT=true
+Environment=NOTES_DB=django_notes
+Environment=NOTES_DB_USER=notes
+Environment=NOTES_DB_PASSWORD=password
+Environment=NOTES_HOST=notes.example.com
+ExecStartPre=-/usr/bin/bash -c 'mkdir /var/run/uwsgi; chown -R nginx:nginx /var/run/uwsgi'
+ExecStart=/usr/bin/bash -c 'pipenv run uwsgi --ini /srv/www/content-nginx-uwsgi/notes/uwsgi.ini'
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+
+[Install]
+WantedBy=multi-user.target
