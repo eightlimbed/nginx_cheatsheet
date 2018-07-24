@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# This script will install the 3rd party ModSecurity nginx module on Centos7
+
+# Install dev tools
+yum groupinstall -y 'Development tools'
+
+# These were dependencies that would have been installed with the nginx binary.
+yum install -y \
+  geoip-devel \
+  libcurl-devel \
+  libxml2-devel \
+  libxslt-devel \
+  lmdb-devel \
+  openssl-devel \
+  pcre-devel \
+  perl-ExtUtils-Embed \
+  yajl-devel \
+  zlib-devel
+
+# Move to /opt and clone the ModSecurity repo from SpiderLabs
+cd /opt
+git clone --depth 1 -b v3/master https://github.com/SpiderLabs/ModSecurity.git
+cd ModSecurity
+git submodule init
+git submodule update
+
+# Compile and install the ModSecurity module
+./build.sh
+./configure
+make
+make install
+
+# Build the ModSecurity-nginx module
+cd /opt
+git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git
+wget http://nginx.org/download/nginx-1.12.2.tar.gz # change 1.12.2 to your ver
+tar zxvf nginx-1.12.2.tar.gz
+cd nginx-1.12.2
+./configure --with-compat --add-dynamic-module=../ModSecurity-nginx
+make modules
+
+# Copy the ModSecurity module to /etc/nginx/modules
+cp objs/ngx_http_modsecurity_module.so /etc/nginx/modules/
