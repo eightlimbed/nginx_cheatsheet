@@ -11,3 +11,5 @@ File | Description
 `conf.d/example.com.conf` | Configuration for a very basic web server
 `conf.d/notes.example.com.conf` | Configuration for a python web app using uwsgi
 `conf.d/photos.example.com.conf` | Configuration for a js photo app using nginx as a reverse proxy
+`systemd/web-client.service` | systemd service file for a python web app
+`systemd/notes-uwsgi.service` | systemd service file for a uwsgi app
